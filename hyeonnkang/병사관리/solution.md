@@ -25,7 +25,7 @@ fire, updateSoldier에서 mID로 병사 노드에 바로 접근하기 위해 따
 - fire : O(1)
   - idToSoldiers 배열로 바로 노드 접근
   - 앞, 뒤 노드 연결로 링크드리스트에서 해당 병사 제거
-- updateSoldier : O(n)
+- updateSoldier : O(1)
   - 기존 병사 노드는 제거 (fire 호출)
   - 수정된 점수의 링크드리스트에 추가 (hire 호출)
 - updateTeam : O(n)
