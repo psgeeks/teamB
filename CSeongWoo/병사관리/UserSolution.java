@@ -1,5 +1,3 @@
-package sweaPro.solution_병사관리;
-
 class UserSolution {
 	// 군인 mID 저장 배열
 	static Node soldierArr[] = new Node[100001];
@@ -27,7 +25,13 @@ class UserSolution {
 
 	public void init() {
 		nodeCnt = 0;
-
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				// Head와 Tail을 서로 연결하여 빈 리스트 상태로
+				mTeams[i][j][0].next = mTeams[i][j][1];
+				mTeams[i][j][1].prev = mTeams[i][j][0];
+			}
+		}
 	}
 
 	// 고유번호 mID 병사 영입.
@@ -39,8 +43,8 @@ class UserSolution {
 		mScore--;
 		newSoldier.mID = mID;
 		newSoldier.mTeam = mTeam;
-		
-		//  Head와 Tail 노드 가져오기
+
+		// Head와 Tail 노드 가져오기
 		Node head = mTeams[mTeam][mScore][0];
 		Node tail = mTeams[mTeam][mScore][1];
 
@@ -48,9 +52,9 @@ class UserSolution {
 			head.next = tail; // 내 다음은 tail
 			tail.prev = head; // 내 앞은 prev
 		}
-		
+
 		// Tail 바로 앞에 새로운 병사를 삽입
-		Node prevNode = tail.prev; 
+		Node prevNode = tail.prev;
 
 		newSoldier.next = tail; // 새 병사의 뒤는 Tail
 		newSoldier.prev = prevNode; // 새 병사의 앞은 기존의 마지막 병사
@@ -73,31 +77,42 @@ class UserSolution {
 
 	// 해당 팀 team[i][score]의 병사를 team[i][mScore]로 편입
 	public void updateSoldier(int mID, int mScore) {
+		mScore--;
 		Node currNode = soldierArr[mID];
-		if (currNode.next != null) { // 내 노드 뒤의 앞은 내 노드의 앞
-			currNode.next.prev = soldierArr[mID].prev;
-		}
-		if (currNode.prev != null) { // 내 노드의 앞의 뒤는 내 노드의 뒤
-			currNode.prev.next = soldierArr[mID].next;
-		}
-		Node tail =  mTeams[soldierArr[mID].mTeam][mScore][1].next;
+		currNode.next.prev = soldierArr[mID].prev;
+		currNode.prev.next = soldierArr[mID].next;
+
+		Node tail = mTeams[soldierArr[mID].mTeam][mScore][1];
 		Node prevTail = tail.prev;
+
 		currNode.next = tail;
 		currNode.prev = prevTail;
 		prevTail.next = currNode;
+		tail.prev = currNode;
 	}
 
 	public void updateTeam(int mTeam, int mChangeScore) {
+		mTeam--;
 		if (mChangeScore < 0) {
 			for (int i = 0; i < 5; i++) {
 				// 갱신된 점수가 0보다 작으면 0
 				int changeScore = i + mChangeScore;
 				if (changeScore <= 0)
 					changeScore = 0;
+				if (i == changeScore) continue;
 				Node currHead = mTeams[mTeam][i][0].next;
+				Node currTail = mTeams[mTeam][i][1].prev;
+				if (currHead.equals(mTeams[mTeam][i][1])) {
+					continue;
+				}
 				Node goalTail = mTeams[mTeam][changeScore][1];
-				currHead.prev = goalTail;
-				goalTail.next = currHead;
+				Node goalPrevTail = goalTail.prev;
+				currHead.prev = goalPrevTail;
+				currTail.next = goalTail;
+				goalPrevTail.next = currHead;
+				goalTail.prev = currTail;
+				mTeams[mTeam][i][0].next = mTeams[mTeam][i][1];
+				mTeams[mTeam][i][1].prev = mTeams[mTeam][i][0];
 			}
 		} else {
 			for (int i = 4; i >= 0; i--) {
@@ -105,30 +120,44 @@ class UserSolution {
 				int changeScore = i + mChangeScore;
 				if (changeScore >= 4)
 					changeScore = 4;
+				if (i == changeScore) continue;
 				Node currHead = mTeams[mTeam][i][0].next;
+				Node currTail = mTeams[mTeam][i][1].prev;
+				if (currHead.equals(mTeams[mTeam][i][1])) {
+					continue;
+				}
 				Node goalTail = mTeams[mTeam][changeScore][1];
-				currHead.prev = goalTail;
-				goalTail.next = currHead;
+				Node goalPrevTail = goalTail.prev;
+				currHead.prev = goalPrevTail;
+				currTail.next = goalTail;
+				goalPrevTail.next = currHead;
+				goalTail.prev = currTail;
+				mTeams[mTeam][i][0].next = mTeams[mTeam][i][1];
+				mTeams[mTeam][i][1].prev = mTeams[mTeam][i][0];
 			}
 		}
 	}
 
 	public int bestSoldier(int mTeam) {
+		mTeam--;
 		int maxNum = 0;
-		for(int i = 4; i >= 0; i--) {
+		for (int i = 4; i >= 0; i--) {
 			Node head = mTeams[mTeam][i][0];
 			Node tail = mTeams[mTeam][i][1];
-			Node p = head.next; 
-			while (p != null) {
-				maxNum = Math.max(maxNum, p.mID);
-				p = p.next;
+			Node p = head.next;
+			if (p != tail) {
+				while (p != tail) {
+					maxNum = Math.max(maxNum, p.mID);
+					p = p.next;
+				}
+				return maxNum;
 			}
 		}
 		return 0;
 	}
 
 	class Node {
-		int mID; // 이거 말곤 필요없음
+		int mID;
 		int mTeam;
 		Node prev;
 		Node next;
