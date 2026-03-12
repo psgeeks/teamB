@@ -1,0 +1,2 @@
+- getMaxDist()에서 bfs를 수행할 때 시작노드에 대해 visited를 true로 설정하지 않음
+- getLCAIdx()에서 depth 맞출 때 `depth[a] - (1<<log) >= depth[b]` 해야하는 데, `depth[a] - log >= depth[b]`로 잘못 생각함.
