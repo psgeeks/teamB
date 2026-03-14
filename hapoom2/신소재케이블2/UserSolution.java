@@ -3,6 +3,9 @@ package 신소재케이블2;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * 메모리: 102,288kb 실행시간:433ms
+ */
 class UserSolution
 {
 	static final int MAX = 10005; //최대 장비 수
@@ -121,10 +124,11 @@ class UserSolution
 	//ban: x < 다시 돌아가는 것 금지
 	//initialWeight: e.w x에서 그 이웃까지 간 비용부터 시작
 	long MaxDist(int start,int ban,int initialWeight) {
-		int top = 1;
+		int top = 0;
 		stackNode[top] = start;
 		stackParent[top] = ban;
 		stackDist[top] = initialWeight;
+		top ++;
 		
 		long maxDist = 0;
 		
