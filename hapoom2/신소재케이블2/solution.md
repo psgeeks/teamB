@@ -121,7 +121,7 @@ graph[u].add(newEdge(v,latency));
 graph[v].add(newEdge(u,latency));
 ```
 
-1. 기본 정보 설정
+2. 기본 정보 설정
 
 ```
 parent[0][v]=u
@@ -129,7 +129,7 @@ depth[v]=depth[u]+1
 distRoot[v]=distRoot[u]+latency
 ```
 
-1. LCA 테이블 갱신
+3. LCA 테이블 갱신
 
 ```
 for (k=1..LOG)
@@ -156,7 +156,7 @@ for(int k=LOG-1;k>=0;k--) {
 
 더 깊은 노드를 위로 올림
 
-1.  두 노드를 같이 올리면서 LCA 바로 아래까지 이동
+2.  두 노드를 같이 올리면서 LCA 바로 아래까지 이동
 
 ```java
 for(int k=LOG-1;k>=0;k--) {
@@ -167,7 +167,7 @@ for(int k=LOG-1;k>=0;k--) {
 		}
 ```
 
-1. 부모 반환
+3. 부모 반환
 
 ```java
 returnparent[0][a]
@@ -187,7 +187,7 @@ Binary Lifting을 이용하여 LCA를 **O(log N)**에 계산합니다.
 intc = LCA(mDevice1,mDevice2)
 ```
 
-1. 거리 공식 적용
+2. 거리 공식 적용
 
 ```java
 dist = distRoot[a]+distRoot[b]-2*distRoot[c]
